@@ -10,75 +10,76 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import modelo.Cliente;
+import modelo.Fornecedor;
 import modelo.Entidade;
 
-public class ClientePersist extends Persistencia {
+public class FornecePersist extends Persistencia {
 	
-  private static ClientePersist cP;
-	private static List<Cliente> clientes;
+  private static FornecePersist fP;
+	private static List<Fornecedor> fornecedor;
 
-	private ClientePersist() {
-	  clientes = new ArrayList<>();
+	private FornecePersist() {
+	  fornecedor = new ArrayList<>();
 	}
 
-	public static ClientePersist getCliPer(){
+	public static FornecePersist getForPer(){
 
-	  if(cP == null){
-		  cP = new ClientePersist();
+		if(fP == null){
+			fP = new FornecePersist();
 		}
 
-	  return cP;
+		return fP;
 	}
 
-  public List<Cliente> getClientes() {
-    return clientes;
+  public List<Fornecedor> getFornecedores() {
+    return fornecedor;
   }
 
   public void inserir(Entidade entidade) {
-    clientes.add((Cliente) entidade);
+    fornecedor.add((Fornecedor) entidade);
   }
 
   public boolean remover(Entidade entidade) {
-    return clientes.remove((Cliente) entidade);
+    return fornecedor.remove((Fornecedor) entidade);
   }
 
   public boolean alterar(Entidade entidade){
 
-    Cliente cliente = (Cliente) entidade;
-    for (int i = 0; i < clientes.size(); i++) {
+    Fornecedor f = (Fornecedor) entidade;
 
-      if (clientes.get(i).getId() == cliente.getId()) {
-        clientes.set(i, cliente);
+    for (int i = 0; i < fornecedor.size(); i++) {
+
+      if (fornecedor.get(i).getId() == f.getId()) {
+        fornecedor.set(i, f);
 
         return true;
       }
-      
+
     }
-    
+
     return false;
   }
 
   public Entidade buscar(int id) {
-    for (Cliente cliente : clientes) {
-      if (cliente.getId() == id) {
-        return cliente;
+    for (Fornecedor fornecedor : fornecedor) {
+      if (fornecedor.getId() == id) {
+        return fornecedor;
       }
     }
     return null;
   }
 
   public Entidade buscar(String nome) {
-    for (Cliente cliente : clientes) {
-      if (cliente.getName().equals(nome)) {
-        return cliente;
+    for (Fornecedor fornecedor : fornecedor) {
+      if (fornecedor.getName().equals(nome)) {
+        return fornecedor;
       }
     }
     return null;
   }
   
 	public boolean salvarNoArquivo() {
-    File file = new File("clientes.txt");
+    File file = new File("fornecedor.txt");
     FileOutputStream fos;
     ObjectOutputStream oos;
 
@@ -86,8 +87,8 @@ public class ClientePersist extends Persistencia {
       fos = new FileOutputStream(file);
       oos = new ObjectOutputStream(fos);
 
-      for (Cliente cliente : clientes) {
-        oos.writeObject(cliente);
+      for (Fornecedor fornecedor : fornecedor) {
+        oos.writeObject(fornecedor);
       }
 
       oos.close();
@@ -100,8 +101,8 @@ public class ClientePersist extends Persistencia {
   }
 	
   public boolean carregarDoArquivo() {
-    clientes = new ArrayList<>();
-    File file = new File("clientes.txt");
+    fornecedor= new ArrayList<>();
+    File file = new File("fornecedor.txt");
     FileInputStream fis;
     ObjectInputStream ois;
 
@@ -112,7 +113,7 @@ public class ClientePersist extends Persistencia {
       try {
         while (true) {
           Object obj = ois.readObject();
-          clientes.add((Cliente) obj);
+          fornecedor.add((Fornecedor) obj);
         }
       } catch (EOFException e) {
         ois.close();

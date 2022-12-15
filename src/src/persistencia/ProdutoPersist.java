@@ -13,24 +13,34 @@ import java.util.List;
 import modelo.Produto;
 import modelo.Entidade;
 
-public class ProdutoPersis extends Persistencia {
+public class ProdutoPersist extends Persistencia {
 
-	private List<Produto> produtos;
+	private static ProdutoPersist pP;
+	private static List<Produto> produtos;
 
-	public ProdutoPersis() {
+	private ProdutoPersist() {
 		produtos = new ArrayList<>();
 	}
+
+	public static ProdutoPersist getProdPer(){
+
+		if(pP == null){
+			pP = new ProdutoPersist();
+		}
+
+		return pP;
+	}
 	
-	public List<Produto> getClientes() {
+	public List<Produto> getProdutos() {
 		return produtos;
 	}
 
 	public void inserir(Entidade entidade) {
-		this.produtos.add((Produto) entidade);
+		produtos.add((Produto) entidade);
 	}
 
 	public boolean remover(Entidade entidade) {
-		return this.produtos.remove((Produto) entidade);
+		return produtos.remove((Produto) entidade);
 	}
 
 	public boolean alterar(Entidade entidade){

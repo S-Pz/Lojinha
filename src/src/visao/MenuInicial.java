@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
 public class MenuInicial extends JFrame{
 
     String res = new String();
@@ -25,6 +24,7 @@ public class MenuInicial extends JFrame{
     
     public MenuInicial(){
 
+        
         frame = new JFrame("Menu Inicial");
         
         frame.setSize(400, 305);
@@ -58,7 +58,7 @@ public class MenuInicial extends JFrame{
 
 			public void actionPerformed(ActionEvent arg0){
 
-                System.out.println(new VisaoProduto().adicionarProduto());
+                new VisaoProduto();
                 
 			}			
 		});

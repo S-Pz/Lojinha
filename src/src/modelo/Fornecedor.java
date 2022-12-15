@@ -42,7 +42,7 @@ public class Fornecedor extends Entidade {
     }
 
     public String getName() {
-        return this.name;
+        return this.nameFantasy;
     }
     
     public void setName(String nameFantasy) {

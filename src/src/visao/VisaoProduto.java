@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,9 +18,10 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.Produto;
 import controle.ControleProduto;
-import visao.MenuInicial;
 
 public class VisaoProduto extends JFrame{
+
+    ControleProduto cp = new ControleProduto();
 
     private JTextField tfName, tfType, tfPrice, tfQuant;
     private JLabel lbName, lbType, lbPrice, lbQuant;
@@ -30,14 +30,12 @@ public class VisaoProduto extends JFrame{
     private DefaultTableModel tableModel;
     private JFrame frame; 
 
-    private ArrayList<Produto> products;
-
     public VisaoProduto(){
-        
+
         frame = new JFrame("Cadastra Produto");
         
         frame.setSize(500, 600);
-        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setResizable(false);
         
@@ -87,7 +85,6 @@ public class VisaoProduto extends JFrame{
         tableModel.addColumn("Preço");
         tableModel.addColumn("Quantidade");
 
-        
         table = new JTable(tableModel);
         table.setPreferredSize(new Dimension(500, 400));
         table.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -105,11 +102,14 @@ public class VisaoProduto extends JFrame{
         btnPanel.setPreferredSize(new Dimension(500, 80));
         btnPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
+        carregarTabela();
+
         btnInserir = new JButton("Inserir");
         btnInserir.addActionListener(new ActionListener(){
 
             public void actionPerformed(ActionEvent arg0){
                 inserir();
+                carregarTabela();
             }
 
         });
@@ -127,36 +127,43 @@ public class VisaoProduto extends JFrame{
         frame.add(btnPanel);
 
         frame.setVisible(true);
-
     }
 
     public void inserir(){
 
         Produto produto = new Produto();
 
-        produto.setId(0);
+        produto.setId(cp.getPersist().getProdutos().size() + 1);
         produto.setName(tfName.getText());
         produto.setType(tfType.getText());
         produto.setPrice(Float.parseFloat(tfPrice.getText()));
-        produto.setQuantity(Integer.parseInt(tfPrice.getText()));
+        produto.setQuantity(Integer.parseInt(tfQuant.getText()));
 
-        ControleProduto cp = new ControleProduto();
         cp.inserir(produto);
     }
 
     private void carregarTabela(){
+        Produto p;
+
         tableModel.setNumRows(0);
-        for(Produto p : products)
+
+        for(int i = 0; i < cp.getPersist().getProdutos().size(); i++) {
+            p = cp.getPersist().getProdutos().get(i);
+
             tableModel.addRow(new Object[]{
-                0,
+                p.getId(),
                 p.getName(),
+                p.getType(),
                 p.getPrice(),
-                p.getQuantity(),
-                p.getType()
+                p.getQuantity()
             });
+
+            System.out.println(p.getName()); 
+        }
     }
+
     public static void main(String[] args) {
-      new VisaoProduto();
+        new VisaoProduto();
     }
 }
 

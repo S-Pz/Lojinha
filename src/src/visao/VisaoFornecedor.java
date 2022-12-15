@@ -18,6 +18,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import modelo.Fornecedor;
+import controle.ControleFornecedor;
+
 public class VisaoFornecedor extends JFrame {
 
     private JLabel lbName, lbCnpj, lbAdress, lbPhone;
