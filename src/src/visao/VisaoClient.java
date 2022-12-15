@@ -21,6 +21,8 @@ import controle.ControleCliente;
 
 public class VisaoClient extends JFrame{
 
+    ControleCliente contCliente = new ControleCliente();
+
     private JFrame frame; 
     JLabel lbName, lbAge, lbCpf, lbPhone, lbAdress;
     JTextField tfName, tfAge, tfCpf, tfPhone, tfAdress;
@@ -87,6 +89,7 @@ public class VisaoClient extends JFrame{
         
         //Cria tabela com as colunas dos atributos dos clietes.
         tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
         tableModel.addColumn("Cpf");
         tableModel.addColumn("Telefone");
@@ -94,9 +97,10 @@ public class VisaoClient extends JFrame{
         table = new JTable(tableModel);
         table.setPreferredSize(new Dimension(500, 400));
         table.setLayout(new FlowLayout(FlowLayout.CENTER));
-        table.getColumnModel().getColumn(0).setMaxWidth(150);
-        table.getColumnModel().getColumn(1).setMaxWidth(150);
-        table.getColumnModel().getColumn(2).setMaxWidth(150);
+        table.getColumnModel().getColumn(0).setMinWidth(10);
+        table.getColumnModel().getColumn(1).setMinWidth(100);
+        table.getColumnModel().getColumn(2).setMinWidth(100);
+        table.getColumnModel().getColumn(3).setMinWidth(90);
 
         scroll = new JScrollPane();
 		scroll.setViewportView(table);
@@ -107,15 +111,16 @@ public class VisaoClient extends JFrame{
         btnPanel.setPreferredSize(new Dimension(500, 80));
         btnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        carregarTabela();
+
         btnInserir = new JButton("Inserir");
         btnInserir.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0){
                 inserir();
-                // loadTable();
+                carregarTabela();
             }
         });
 
-        //btnInserir.setPreferredSize(new Dimension(50, 10));
 
         btnPanel.add(btnInserir);
 
@@ -143,8 +148,28 @@ public class VisaoClient extends JFrame{
         cliente.setAge(Integer.parseInt(tfAge.getText()));
         cliente.setAdress(tfAdress.getText());
 
-        ControleCliente contCliente = new ControleCliente();
         contCliente.inserir(cliente);
+    }
+
+    private void carregarTabela(){
+
+        Cliente c;
+
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < contCliente.getPersist().getClientes().size(); i++) {
+            c = contCliente.getPersist().getClientes().get(i);
+        
+            tableModel.addRow(new Object[]{
+                c.getId(),
+                c.getName(),
+                c.getCpf(),
+                c.getPhone(),
+    
+            });
+
+            System.out.println(c.getName());
+        }
     }
 
     public static void main(String[] args) {
