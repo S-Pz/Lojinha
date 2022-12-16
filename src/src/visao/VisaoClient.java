@@ -18,7 +18,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.Cliente;
-import persistencia.ClientePersist;
 import controle.ControleCliente;
 
 public class VisaoClient extends JFrame{

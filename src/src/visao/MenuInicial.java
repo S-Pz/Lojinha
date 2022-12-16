@@ -1,29 +1,28 @@
 package visao;
 
-
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import controle.ControleCliente;
+import controle.ControleProduto;
 import modelo.Venda;
-import visao.*;
 
 public class MenuInicial extends JFrame{
 
-    private JButton btnCliente, btnProduto, btnFronecedor, btnVenda ;
+    private JButton btnCliente, btnProduto, btnFronecedor, btnVenda, btnSave;
     private JFrame frame; 
     
     public MenuInicial(){
 
         frame = new JFrame("Menu Inicial");
         
-        frame.setSize(400, 305);
+        frame.setSize(500, 370);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -67,6 +66,7 @@ public class MenuInicial extends JFrame{
                 new VisaoFornecedor();
             }
         });
+        
 		frame.add(btnFronecedor);
 
         btnVenda = new JButton("Venda");
@@ -74,13 +74,27 @@ public class MenuInicial extends JFrame{
         btnVenda.addActionListener( new ActionListener(){
 
             public void actionPerformed (ActionEvent arg0){
-                new Venda();
+                new VisaoVenda();
             }
         });
-    
         frame.add(btnVenda);
-        frame.setVisible(true);
 
+        btnSave = new JButton("Sair/Salvar");
+        btnSave.setPreferredSize(new Dimension(150, 60));
+        btnSave.addActionListener( new ActionListener(){
+
+            public void actionPerformed (ActionEvent arg0){
+                ControleCliente c = new ControleCliente();
+		        ControleProduto p = new ControleProduto();
+
+                c.salvar();
+		        p.salvar();
+
+               System.exit(0);
+            }
+        });
+
+        frame.add(btnSave);
+        frame.setVisible(true);
     }
 }
-

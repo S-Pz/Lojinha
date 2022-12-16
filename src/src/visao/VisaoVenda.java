@@ -81,6 +81,7 @@ public class VisaoVenda extends JFrame {
 
         frame.add(scroll);
         frame.setVisible(true);
+        
     }
 
     public static void main(String[] args) {
