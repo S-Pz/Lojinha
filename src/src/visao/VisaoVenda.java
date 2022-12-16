@@ -41,6 +41,9 @@ public class VisaoVenda extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         
+        JOptionPane.showMessageDialog(this, "Para comprar faça: ID produto + hífen. Ex: 43-1-2", "Instrução",
+        JOptionPane.INFORMATION_MESSAGE);
+
         lbIdCliente = new JLabel("ID do Cliente: ");
         tflbIdCliente = new JTextField();
 
@@ -83,5 +86,4 @@ public class VisaoVenda extends JFrame {
     public static void main(String[] args) {
         new VisaoVenda();
     }
-
 }
