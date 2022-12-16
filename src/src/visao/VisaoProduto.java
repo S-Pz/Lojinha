@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
@@ -35,6 +36,7 @@ public class VisaoProduto extends JFrame{
         frame = new JFrame("Cadastra Produto");
         
         frame.setSize(500, 600);
+        frame.setLocationRelativeTo(null);
         
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setResizable(false);
@@ -82,7 +84,7 @@ public class VisaoProduto extends JFrame{
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
         tableModel.addColumn("Categoria");
-        tableModel.addColumn("Preço");
+        tableModel.addColumn("Preço(R$)");
         tableModel.addColumn("Quantidade");
 
         table = new JTable(tableModel);
@@ -119,7 +121,10 @@ public class VisaoProduto extends JFrame{
         btnApagar = new JButton("Apagar");
 		btnApagar.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+                
+			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
+                cp.remover(cp.buscar(Integer.parseInt(getMessage)));
+                carregarTabela();
 			}			
 		});
 
@@ -160,6 +165,8 @@ public class VisaoProduto extends JFrame{
 
             System.out.println(p.getName()); 
         }
+
+
     }
 
     public static void main(String[] args) {

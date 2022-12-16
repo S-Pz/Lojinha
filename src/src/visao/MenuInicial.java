@@ -1,7 +1,6 @@
 package visao;
 
-import visao.VisaoClient;
-import visao.VisaoProduto;
+
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -11,20 +10,17 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+
+import modelo.Venda;
+import visao.*;
 
 public class MenuInicial extends JFrame{
-
-    String res = new String();
-    VisaoProduto veioDoProduct;
 
     private JButton btnCliente, btnProduto, btnFronecedor, btnVenda ;
     private JFrame frame; 
     
     public MenuInicial(){
 
-        
         frame = new JFrame("Menu Inicial");
         
         frame.setSize(400, 305);
@@ -45,7 +41,6 @@ public class MenuInicial extends JFrame{
         btnCliente.addActionListener(new ActionListener(){
 
             public void actionPerformed(ActionEvent arg0){
-
                 new VisaoClient();       
             }
         });
@@ -57,7 +52,6 @@ public class MenuInicial extends JFrame{
 		btnProduto.addActionListener( new ActionListener(){
 
 			public void actionPerformed(ActionEvent arg0){
-
                 new VisaoProduto();
                 
 			}			
@@ -68,8 +62,9 @@ public class MenuInicial extends JFrame{
         btnFronecedor = new JButton("Fornecedor");
         btnFronecedor.setPreferredSize(new Dimension(350, 60));
         btnFronecedor.addActionListener( new ActionListener(){
+            
             public void actionPerformed (ActionEvent arg0){
-
+                new VisaoFornecedor();
             }
         });
 		frame.add(btnFronecedor);
@@ -79,17 +74,12 @@ public class MenuInicial extends JFrame{
         btnVenda.addActionListener( new ActionListener(){
 
             public void actionPerformed (ActionEvent arg0){
-
+                new Venda();
             }
         });
     
         frame.add(btnVenda);
         frame.setVisible(true);
-
-    }
-
-    public static void main(String[] args) {
-        new MenuInicial();
 
     }
 }

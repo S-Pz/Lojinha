@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
@@ -17,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.Cliente;
+import persistencia.ClientePersist;
 import controle.ControleCliente;
 
 public class VisaoClient extends JFrame{
@@ -38,7 +40,6 @@ public class VisaoClient extends JFrame{
         frame.setSize(500, 580);
         frame.setLocationRelativeTo(null);
     
-        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setResizable(false);
         
@@ -121,14 +122,21 @@ public class VisaoClient extends JFrame{
             }
         });
 
-
         btnPanel.add(btnInserir);
 
         btApagar = new JButton("Apagar");
 		btApagar.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// removePessoa();
-				// carregarTabela();
+    
+                try{
+                    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
+                    contCliente.remover(contCliente.buscar(Integer.parseInt(getMessage)));
+                
+                }catch(Exception e){
+                    frame.dispose();
+                }
+                carregarTabela();
+                
 			}			
 		});
 
@@ -141,7 +149,7 @@ public class VisaoClient extends JFrame{
 
         Cliente cliente = new Cliente();
 
-        cliente.setId(0);
+        cliente.setId(contCliente.getPersist().getClientes().size() + 1);
         cliente.setName(tfName.getText());
         cliente.setCpf(Long.parseLong(tfCpf.getText()));
         cliente.setPhone(Long.parseLong(tfPhone.getText()));
@@ -172,8 +180,8 @@ public class VisaoClient extends JFrame{
         }
     }
 
-    public static void main(String[] args) {
-      new VisaoClient();
+    // public static void main(String[] args) {
+    //   new VisaoClient();
     
-    }
+    // }
 }

@@ -11,6 +11,7 @@ import javax.swing.JButton;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
@@ -22,7 +23,9 @@ import modelo.Fornecedor;
 import controle.ControleFornecedor;
 
 public class VisaoFornecedor extends JFrame {
-
+    
+    ControleFornecedor Cf = new ControleFornecedor();
+    
     private JLabel lbName, lbCnpj, lbAdress, lbPhone;
     private JTextField tfName, tfCnpj, tfAdress, tfPhone;
     private JButton btnInserir, btnApagar ;
@@ -30,6 +33,7 @@ public class VisaoFornecedor extends JFrame {
     private DefaultTableModel tableModel;
     private JFrame frame; 
     private JPanel btnPanel;
+    JScrollPane scroll;
 
     public VisaoFornecedor(){
         
@@ -38,6 +42,7 @@ public class VisaoFornecedor extends JFrame {
         frame.setSize(500, 560);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
         
         //Name insert
         lbName = new JLabel("Nome do Fornecedor:");
@@ -74,7 +79,7 @@ public class VisaoFornecedor extends JFrame {
         //Cria tabela com as colunas dos atributos dos produtos.
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
-        tableModel.addColumn("Nome Fantasy");
+        tableModel.addColumn("Nome");
         tableModel.addColumn("CNPJ");
         tableModel.addColumn("Endereço");
         tableModel.addColumn("Telefone");
@@ -87,7 +92,7 @@ public class VisaoFornecedor extends JFrame {
         table.getColumnModel().getColumn(2).setMinWidth(90);
         table.getColumnModel().getColumn(3).setMinWidth(50);
 
-        JScrollPane scroll = new JScrollPane();
+        scroll = new JScrollPane();
 		scroll.setViewportView(table);
         
 		frame.add(scroll);
@@ -96,11 +101,14 @@ public class VisaoFornecedor extends JFrame {
         btnPanel.setPreferredSize(new Dimension(500, 80));
         btnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        carregarTabela();
+        
         btnInserir = new JButton("Inserir");
         btnInserir.addActionListener(new ActionListener(){
 
             public void actionPerformed(ActionEvent arg0){
-                frame.dispose();
+                inserir();
+                carregarTabela();
             }
 
         });
@@ -110,6 +118,10 @@ public class VisaoFornecedor extends JFrame {
         btnApagar = new JButton("Apagar");
 		btnApagar.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+                
+                String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
+                Cf.remover(Cf.buscar(Integer.parseInt(getMessage)));
+                carregarTabela();
 
 			}			
 		});
@@ -120,7 +132,39 @@ public class VisaoFornecedor extends JFrame {
         frame.setVisible(true);
 
     }
-    public static void main(String[] args) {
-        new VisaoFornecedor();
+
+    public void inserir(){
+
+        Fornecedor fornecedor = new Fornecedor();
+
+        fornecedor.setId(Cf.getPersist().getFornecedores().size() + 1);
+        fornecedor.setName(tfName.getText());
+        fornecedor.setCnpj(Long.parseLong(tfCnpj.getText()));
+        fornecedor.setAdress(tfAdress.getText());
+        fornecedor.setPhone(Long.parseLong(tfPhone.getText()));
+
+        Cf.inserir(fornecedor);
+    }
+
+    private void carregarTabela(){
+
+        Fornecedor f;
+
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < Cf.getPersist().getFornecedores().size(); i++) {
+            f = Cf.getPersist().getFornecedores().get(i);
+        
+            tableModel.addRow(new Object[]{
+                f.getId(),
+                f.getName(),
+                f.getCnpj(),
+                f.getAdress(),
+                f.getPhone(),
+    
+            });
+
+            System.out.println(f.getName());
+        }
     }
 }
