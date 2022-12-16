@@ -23,11 +23,13 @@ import controle.ControleFornecedor;
 
 public class VisaoFornecedor extends JFrame {
     
-    ControleFornecedor Cf = new ControleFornecedor();
+    private static final long serialVersionUID = 1L;
+
+	ControleFornecedor cf = new ControleFornecedor();
     
     private JLabel lbName, lbCnpj, lbAdress, lbPhone;
     private JTextField tfName, tfCnpj, tfAdress, tfPhone;
-    private JButton btnInserir, btnApagar ;
+    private JButton btnInserir, btnApagar, btnBuscar ;
     private JTable table;
     private DefaultTableModel tableModel;
     private JFrame frame; 
@@ -38,7 +40,7 @@ public class VisaoFornecedor extends JFrame {
         
         frame = new JFrame("Fornecedor");
         
-        frame.setSize(500, 560);
+        frame.setSize(500, 580);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -119,30 +121,46 @@ public class VisaoFornecedor extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
                 
                 String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
-                Cf.remover(Cf.buscar(Integer.parseInt(getMessage)));
+                cf.remover(cf.buscar(Integer.parseInt(getMessage)));
                 carregarTabela();
 
 			}			
 		});
-
 		btnPanel.add(btnApagar);
+
+        btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+                
+			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou fornecedor deseja buscar");
+			    try{
+                    int aux = Integer.parseInt(getMessage);
+                    carregarTabela(aux);
+
+                }catch(Exception error){
+                    carregarTabela(getMessage);
+                }
+                
+			}			
+		});
+		btnPanel.add(btnBuscar);
+
         frame.add(btnPanel);
-
         frame.setVisible(true);
-
     }
 
     public void inserir(){
 
         Fornecedor fornecedor = new Fornecedor();
 
-        fornecedor.setId(Cf.getPersist().getFornecedores().size() + 1);
+        fornecedor.setId(cf.getPersist().getIds());
+        cf.getPersist().setIds(cf.getPersist().getIds() + 1);
         fornecedor.setName(tfName.getText());
         fornecedor.setCnpj(Long.parseLong(tfCnpj.getText()));
         fornecedor.setAdress(tfAdress.getText());
         fornecedor.setPhone(Long.parseLong(tfPhone.getText()));
 
-        Cf.inserir(fornecedor);
+        cf.inserir(fornecedor);
     }
 
     private void carregarTabela(){
@@ -151,8 +169,8 @@ public class VisaoFornecedor extends JFrame {
 
         tableModel.setNumRows(0);
 
-        for(int i = 0; i < Cf.getPersist().getFornecedores().size(); i++) {
-            f = Cf.getPersist().getFornecedores().get(i);
+        for(int i = 0; i < cf.getPersist().getFornecedores().size(); i++) {
+            f = cf.getPersist().getFornecedores().get(i);
         
             tableModel.addRow(new Object[]{
                 f.getId(),
@@ -162,8 +180,47 @@ public class VisaoFornecedor extends JFrame {
                 f.getPhone(),
     
             });
+        }
+    }
+    private void carregarTabela(int ID){
 
-            System.out.println(f.getName());
+        Fornecedor f;
+
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < cf.getPersist().getFornecedores().size(); i++) {
+            f = cf.getPersist().getFornecedores().get(i);
+
+            if(f.getId() == ID){
+                tableModel.addRow(new Object[]{
+                    f.getId(),
+                    f.getName(),
+                    f.getCnpj(),
+                    f.getAdress(),
+                    f.getPhone(),
+
+                });
+            }
+        }
+    }
+
+    private void carregarTabela(String name){
+
+        Fornecedor f;
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < cf.getPersist().getFornecedores().size(); i++) {
+            f = cf.getPersist().getFornecedores().get(i);
+
+            if(f.getName().equals(name)){
+                tableModel.addRow(new Object[]{
+                    f.getId(),
+                    f.getName(),
+                    f.getCnpj(),
+                    f.getAdress(),
+                    f.getPhone(),
+                });
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ public class ProdutoPersist extends Persistencia {
 
 	private static ProdutoPersist pP;
 	private static List<Produto> produtos;
+	private static int ids;
 
 	private ProdutoPersist() {
 		produtos = new ArrayList<>();
@@ -26,9 +27,18 @@ public class ProdutoPersist extends Persistencia {
 
 		if(pP == null){
 			pP = new ProdutoPersist();
+			pP.setIds(0);
 		}
 
 		return pP;
+	}
+	
+	public int getIds() {
+		return ids;
+	}
+	
+	public void setIds(int id) {
+		ids = id;
 	}
 	
 	public List<Produto> getProdutos() {
@@ -44,34 +54,43 @@ public class ProdutoPersist extends Persistencia {
 	}
 
 	public boolean alterar(Entidade entidade){
-
 		Produto produto = (Produto) entidade;
 
 		for (int i = 0; i < produtos.size(); i++) {
+			
 			if (produtos.get(i).getId() == produto.getId()) {
-
 				produtos.set(i, produto);
 				return true;
 			}
+			
 		}
+		
 		return false;
 	}
 
 	public Entidade buscar(int id) {
-	for (Produto produto : produtos) {
-		if (produto.getId() == id) {
-			return produto;
+		
+		for (Produto produto : produtos) {
+			
+			if (produto.getId() == id) {
+				return produto;
+			}
+			
 		}
-	}
+		
 		return null;
 	}
 
 	public Entidade buscar(String nome) {
+		
 		for (Produto produto : produtos) {
+			
 			if (produto.getName().equals(nome)) {
 				return produto;
 			}
+			
 		}
+		
 		return null;
 	}
 	
@@ -95,6 +114,7 @@ public class ProdutoPersist extends Persistencia {
 		} catch (Exception e) {
 			return false;
 		}
+		
 	}
 	
 	public boolean carregarDoArquivo() {
@@ -108,17 +128,22 @@ public class ProdutoPersist extends Persistencia {
 			ois = new ObjectInputStream(fis);
 
 			try {
+				
 				while (true) {
 					Object obj = ois.readObject();
 					produtos.add((Produto) obj);
 				}
+				
 			} catch (EOFException e) {
-					ois.close();
-					fis.close();
+				ois.close();
+				fis.close();
 			}
+			
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
+		
 	}
+	
 }

@@ -22,14 +22,16 @@ import controle.ControleCliente;
 
 public class VisaoClient extends JFrame{
 
-    ControleCliente contCliente = new ControleCliente();
+    private static final long serialVersionUID = 1L;
+
+	ControleCliente cc = new ControleCliente();
 
     private JFrame frame; 
     JLabel lbName, lbAge, lbCpf, lbPhone, lbAdress;
     JTextField tfName, tfAge, tfCpf, tfPhone, tfAdress;
     DefaultTableModel tableModel;
     JPanel btnPanel;
-    JButton btnInserir, btApagar;
+    JButton btnInserir, btApagar, btnBuscar;
     JTable table ;
     JScrollPane scroll;
 
@@ -129,7 +131,7 @@ public class VisaoClient extends JFrame{
     
                 try{
                     String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
-                    contCliente.remover(contCliente.buscar(Integer.parseInt(getMessage)));
+                    cc.remover(cc.buscar(Integer.parseInt(getMessage)));
                 
                 }catch(Exception e){
                     frame.dispose();
@@ -138,8 +140,28 @@ public class VisaoClient extends JFrame{
                 
 			}			
 		});
-
 		btnPanel.add(btApagar);
+
+        btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+                
+			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou cliente deseja buscar");
+			    
+                try{
+                    int aux = Integer.parseInt(getMessage);
+                    carregarTabela(aux);
+
+                }catch(Exception error){
+                    carregarTabela(getMessage);
+                }
+                
+			}			
+		});
+		btnPanel.add(btnBuscar);
+
+        frame.add(btnPanel);
+
         frame.add(btnPanel);
         frame.setVisible(true);
     }
@@ -147,15 +169,16 @@ public class VisaoClient extends JFrame{
     public void inserir(){
 
         Cliente cliente = new Cliente();
-
-        cliente.setId(contCliente.getPersist().getClientes().size() + 1);
+        
+        cliente.setId(cc.getPersist().getIds());
+        cc.getPersist().setIds(cc.getPersist().getIds() + 1);
         cliente.setName(tfName.getText());
         cliente.setCpf(Long.parseLong(tfCpf.getText()));
         cliente.setPhone(Long.parseLong(tfPhone.getText()));
         cliente.setAge(Integer.parseInt(tfAge.getText()));
         cliente.setAdress(tfAdress.getText());
 
-        contCliente.inserir(cliente);
+        cc.inserir(cliente);
     }
 
     private void carregarTabela(){
@@ -164,8 +187,8 @@ public class VisaoClient extends JFrame{
 
         tableModel.setNumRows(0);
 
-        for(int i = 0; i < contCliente.getPersist().getClientes().size(); i++) {
-            c = contCliente.getPersist().getClientes().get(i);
+        for(int i = 0; i < cc.getPersist().getClientes().size(); i++) {
+            c = cc.getPersist().getClientes().get(i);
         
             tableModel.addRow(new Object[]{
                 c.getId(),
@@ -174,8 +197,46 @@ public class VisaoClient extends JFrame{
                 c.getPhone(),
     
             });
+        }
+    }
 
-            System.out.println(c.getName());
+    private void carregarTabela(int ID){
+
+        Cliente c;
+
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < cc.getPersist().getClientes().size(); i++) {
+            c = cc.getPersist().getClientes().get(i);
+
+            if(c.getId() == ID){
+                tableModel.addRow(new Object[]{
+                    c.getId(),
+                    c.getName(),
+                    c.getCpf(),
+                    c.getPhone(),
+
+                });
+            }
+        }
+    }
+
+    private void carregarTabela(String name){
+
+        Cliente c;
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < cc.getPersist().getClientes().size(); i++) {
+            c = cc.getPersist().getClientes().get(i);
+
+            if(c.getName().equals(name)){
+                tableModel.addRow(new Object[]{
+                    c.getId(),
+                    c.getName(),
+                    c.getCpf(),
+                    c.getPhone(),
+                });
+            }
         }
     }
 

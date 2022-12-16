@@ -2,26 +2,26 @@ package modelo;
 
 public class Fornecedor extends Entidade {
     
-    private String nameFantasy;
+    private static final long serialVersionUID = 1L;
+    
+	private String name;
     private long cnpj;
     private String adress;
     private long phone;
 
     public Fornecedor() {
-
     	this.id = 0;
     	this.cnpj = 0;
     	this.adress = "";
-        this.nameFantasy = "";
+        this.name = "";
         this.phone = 0;
     }
 
-    public Fornecedor(String nameFantasy, long cnpj, long phone, String adress, int id) {
-    	
+    public Fornecedor(String name, long cnpj, long phone, String adress, int id) {
     	this.id = id;
         this.cnpj = cnpj;
     	this.adress = adress;
-    	this.nameFantasy = nameFantasy;
+    	this.name = name;
     	this.phone = phone;
     } 
 
@@ -42,11 +42,11 @@ public class Fornecedor extends Entidade {
     }
 
     public String getName() {
-        return this.nameFantasy;
+        return this.name;
     }
     
-    public void setName(String nameFantasy) {
-        this.nameFantasy = nameFantasy;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getPhone() {
@@ -58,7 +58,7 @@ public class Fornecedor extends Entidade {
     }
 
     public void status() {
-        System.out.println("Nome Fantasia: "+ this.nameFantasy);
+        System.out.println("Nome: "+ this.name);
         System.out.println("CNPJ: " + this.cnpj);
         System.out.println("Telefone: " + this.phone);
         System.out.println("Endereço: " + this.adress);

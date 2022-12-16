@@ -3,14 +3,15 @@ package modelo;
 import java.util.ArrayList;
 
 public class Venda extends Entidade {
-
+	
+	private static final long serialVersionUID = 1L;
+	
 	private Cliente cliente;
 	private ArrayList<Produto> produtos;
 	private int trDay;
 	private int trMon;
 	
 	public Venda() {
-
     	this.id = 0;
     	this.produtos = null;
     	this.cliente = null;
@@ -19,7 +20,6 @@ public class Venda extends Entidade {
     }
 	
 	public Venda(int id, Produto prod, Cliente cliente, int trDay, int trMon){
-
 		this.id = id;
 		this.produtos = new ArrayList<Produto>();
 		this.produtos.add(prod);

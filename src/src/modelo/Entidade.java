@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 public abstract class Entidade implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	protected int id;
 
-    //Construtor entidade vazio
     public Entidade(){
         this.id = 0;
     }

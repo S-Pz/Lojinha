@@ -2,14 +2,15 @@ package modelo;
 
 public class Cliente extends Entidade {
     
-    private int age;
+    private static final long serialVersionUID = 1L;
+    
+	private int age;
     private long cpf;
     private String adress;
     private String name;
     private long phone;
 
     public Cliente() {
-
     	this.id = 0;
     	this.age = 0;
     	this.cpf = 0;
@@ -68,7 +69,6 @@ public class Cliente extends Entidade {
     }
 
     public void status() {
-        
         System.out.println("Nome: " + this.name);
         System.out.println("CPF: " + this.cpf);
         System.out.println("Telefone: " + this.phone);

@@ -19,14 +19,18 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.Produto;
 import controle.ControleProduto;
+import controle.ControleFornecedor;
 
 public class VisaoProduto extends JFrame{
 
-    ControleProduto cp = new ControleProduto();
+    private static final long serialVersionUID = 1L;
 
-    private JTextField tfName, tfType, tfPrice, tfQuant;
-    private JLabel lbName, lbType, lbPrice, lbQuant;
-    private JButton btnInserir, btnApagar ;
+    ControleProduto cp = new ControleProduto();
+	ControleFornecedor cf = new ControleFornecedor();
+
+    private JTextField tfName, tfType, tfPrice, tfQuant, tfFor;
+    private JLabel lbName, lbType, lbPrice, lbQuant, lbFor;
+    private JButton btnInserir, btnApagar, btnBuscar;
     private JTable table;
     private DefaultTableModel tableModel;
     private JFrame frame; 
@@ -76,6 +80,14 @@ public class VisaoProduto extends JFrame{
 
         inPanel.add(lbQuant);
         inPanel.add(tfQuant);
+        
+        //For insert
+        lbFor = new JLabel("ID do fornecedor:");
+        tfFor = new JTextField();
+        tfFor.setPreferredSize(new Dimension(40,20));
+
+        inPanel.add(lbFor);
+        inPanel.add(tfFor);
 
         frame.add(inPanel);
 
@@ -123,33 +135,68 @@ public class VisaoProduto extends JFrame{
 			public void actionPerformed(ActionEvent arg0) {
                 
 			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
-                cp.remover(cp.buscar(Integer.parseInt(getMessage)));
-                carregarTabela();
+			    
+			    if(cf.buscar(((Produto) cp.buscar(Integer.parseInt(getMessage))).getFornecedor().getId()) == null) {
+			    	cp.remover(cp.buscar(Integer.parseInt(getMessage)));
+	                carregarTabela();
+
+			    } else {
+
+                    errorMessage("Exclua o fornecedor" + ((Produto) cp.buscar(Integer.parseInt(getMessage))).getFornecedor().getId());
+			    	carregarTabela();
+			    }
+                
 			}			
 		});
-
 		btnPanel.add(btnApagar);
-        frame.add(btnPanel);
 
+        btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+                
+			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou produto deseja buscar");
+			    
+                try{
+                    int aux = Integer.parseInt(getMessage);
+                    carregarTabela(aux);
+
+                }catch(Exception error){
+                    carregarTabela(getMessage);
+                }
+                
+			}			
+		});
+		btnPanel.add(btnBuscar);
+
+        frame.add(btnPanel);
         frame.setVisible(true);
     }
 
     public void inserir(){
 
+    	int idFor;
         Produto produto = new Produto();
 
-        produto.setId(cp.getPersist().getProdutos().size() + 1);
+        produto.setId(cp.getPersist().getIds());
+        cp.getPersist().setIds(cp.getPersist().getIds() + 1);
         produto.setName(tfName.getText());
         produto.setType(tfType.getText());
         produto.setPrice(Float.parseFloat(tfPrice.getText()));
         produto.setQuantity(Integer.parseInt(tfQuant.getText()));
+        idFor = Integer.parseInt(tfFor.getText());
+        
+        if(cf.buscar(idFor) == null) {
+            errorMessage("Insira um fornecedor válido");
 
-        cp.inserir(produto);
+        } else {
+        	cp.inserir(produto);
+        }
+       
     }
 
     private void carregarTabela(){
-        Produto p;
 
+        Produto p;
         tableModel.setNumRows(0);
 
         for(int i = 0; i < cp.getPersist().getProdutos().size(); i++) {
@@ -162,15 +209,56 @@ public class VisaoProduto extends JFrame{
                 p.getPrice(),
                 p.getQuantity()
             });
-
-            System.out.println(p.getName()); 
         }
-
-
     }
 
-    public static void main(String[] args) {
-        new VisaoProduto();
+    private void carregarTabela(int ID){
+
+        Produto p;
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < cp.getPersist().getProdutos().size(); i++) {
+            p = cp.getPersist().getProdutos().get(i);
+
+            if(p.getId() == ID){
+                tableModel.addRow(new Object[]{
+                    p.getId(),
+                    p.getName(),
+                    p.getType(),
+                    p.getPrice(),
+                    p.getQuantity()
+                });
+            }
+        }
     }
+
+    private void carregarTabela(String name){
+        Produto p;
+
+        tableModel.setNumRows(0);
+
+        for(int i = 0; i < cp.getPersist().getProdutos().size(); i++) {
+            p = cp.getPersist().getProdutos().get(i);
+
+            if(p.getName().equals(name)){
+                tableModel.addRow(new Object[]{
+                    p.getId(),
+                    p.getName(),
+                    p.getType(),
+                    p.getPrice(),
+                    p.getQuantity()
+                });
+            }
+        }
+    }
+    private void errorMessage(String m){
+
+        JOptionPane.showMessageDialog(this, m,
+        "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+
+    // public static void main(String[] args) {
+    //     new VisaoProduto();
+    // }
 }
 

@@ -6,16 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import controle.ControleCliente;
+import controle.ControleFornecedor;
 import controle.ControleProduto;
-import modelo.Venda;
+import controle.ControleVenda;
 
 public class MenuInicial extends JFrame{
 
-    private JButton btnCliente, btnProduto, btnFronecedor, btnVenda, btnSave;
+    private static final long serialVersionUID = 1L;
+    
+	private JButton btnCliente, btnProduto, btnFronecedor, btnVenda, btnSave;
     private JFrame frame; 
     
     public MenuInicial(){
@@ -42,6 +44,7 @@ public class MenuInicial extends JFrame{
             public void actionPerformed(ActionEvent arg0){
                 new VisaoClient();       
             }
+            
         });
 
         frame.add(btnCliente);
@@ -52,8 +55,8 @@ public class MenuInicial extends JFrame{
 
 			public void actionPerformed(ActionEvent arg0){
                 new VisaoProduto();
-                
-			}			
+			}	
+			
 		});
 
         frame.add(btnProduto);
@@ -65,6 +68,7 @@ public class MenuInicial extends JFrame{
             public void actionPerformed (ActionEvent arg0){
                 new VisaoFornecedor();
             }
+            
         });
         
 		frame.add(btnFronecedor);
@@ -76,7 +80,9 @@ public class MenuInicial extends JFrame{
             public void actionPerformed (ActionEvent arg0){
                 new VisaoVenda();
             }
+            
         });
+        
         frame.add(btnVenda);
 
         btnSave = new JButton("Sair/Salvar");
@@ -85,16 +91,22 @@ public class MenuInicial extends JFrame{
 
             public void actionPerformed (ActionEvent arg0){
                 ControleCliente c = new ControleCliente();
+                ControleFornecedor f = new ControleFornecedor();
 		        ControleProduto p = new ControleProduto();
+		        ControleVenda v = new ControleVenda();
 
                 c.salvar();
-		        p.salvar();
+                f.salvar();
+                p.salvar();
+                v.salvar();
 
-               System.exit(0);
+		        System.exit(0);
             }
+            
         });
 
         frame.add(btnSave);
         frame.setVisible(true);
     }
+    
 }

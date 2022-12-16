@@ -2,37 +2,30 @@ package modelo;
 
 public class Produto extends Entidade {
     
-    private String name;
+    private static final long serialVersionUID = 1L;
+    
+	private String name;
     private String type;
     private float price;
     private int quantity;
-
-    public String dados;
+    private Fornecedor fornecedor;
 
     public Produto() {
-
     	this.id = 0;
     	this.name = "";
     	this.price = 0;
         this.quantity = 0;
         this.type = "";
+        this.fornecedor = null;
     }
 
-    public Produto(int id, String name, String ty, int quant, float price) {
-
+    public Produto(int id, String name, String ty, int quant, float price, Fornecedor f) {
     	this.id = id;
     	this.name = name;
     	this.price = price;
         this.quantity = quant;
         this.type = ty;
-    }
-
-    public String getDados() {
-        return dados;
-    }
-
-    public void setDados(String dados) {
-        this.dados = dados;
+        this.fornecedor = f;
     }
 
     public String getName() {
@@ -65,6 +58,14 @@ public class Produto extends Entidade {
     
     public void setQuantity(int quant) {
         this.quantity = quant;
+    }
+    
+    public Fornecedor getFornecedor() {
+        return this.fornecedor;
+    }
+    
+    public void setFornecedor(Fornecedor f) {
+        this.fornecedor = f;
     }
     
     public void status() {

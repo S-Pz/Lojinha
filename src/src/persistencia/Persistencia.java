@@ -4,7 +4,7 @@ import modelo.Entidade;
 
 public abstract class Persistencia {
     
-    public abstract void inserir(Entidade entidade);
+	public abstract void inserir(Entidade entidade);
 
     public abstract boolean remover(Entidade entidade);
   
@@ -17,4 +17,5 @@ public abstract class Persistencia {
     public abstract boolean carregarDoArquivo();
   
     public abstract boolean salvarNoArquivo();
+    
 }
