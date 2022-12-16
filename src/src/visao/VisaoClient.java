@@ -36,8 +36,7 @@ public class VisaoClient extends JFrame{
     JScrollPane scroll;
 
     public VisaoClient(){
-        
-        frame = new JFrame("Cadastra Cliente");
+    	frame = new JFrame("Cadastra Cliente");
         frame.setSize(500, 580);
         frame.setLocationRelativeTo(null);
     
@@ -117,47 +116,52 @@ public class VisaoClient extends JFrame{
 
         btnInserir = new JButton("Inserir");
         btnInserir.addActionListener(new ActionListener(){
+        	
             public void actionPerformed(ActionEvent arg0){
                 inserir();
                 carregarTabela();
             }
+            
         });
 
         btnPanel.add(btnInserir);
 
         btApagar = new JButton("Apagar");
 		btApagar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
-    
                 try{
-                    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
+                    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover?");
                     cc.remover(cc.buscar(Integer.parseInt(getMessage)));
                 
-                }catch(Exception e){
+                } catch(Exception e) {
                     frame.dispose();
                 }
-                carregarTabela();
                 
-			}			
+                carregarTabela();
+			}	
+			
 		});
+		
 		btnPanel.add(btApagar);
 
         btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
-                
-			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou cliente deseja buscar");
+			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou cliente (nome) deseja buscar?");
 			    
                 try{
                     int aux = Integer.parseInt(getMessage);
                     carregarTabela(aux);
-
-                }catch(Exception error){
+                } catch(Exception e) {
                     carregarTabela(getMessage);
                 }
                 
-			}			
+			}		
+			
 		});
+		
 		btnPanel.add(btnBuscar);
 
         frame.add(btnPanel);
@@ -167,7 +171,6 @@ public class VisaoClient extends JFrame{
     }
 
     public void inserir(){
-
         Cliente cliente = new Cliente();
         
         cliente.setId(cc.getPersist().getIds());
@@ -182,7 +185,6 @@ public class VisaoClient extends JFrame{
     }
 
     private void carregarTabela(){
-
         Cliente c;
 
         tableModel.setNumRows(0);
@@ -197,11 +199,12 @@ public class VisaoClient extends JFrame{
                 c.getPhone(),
     
             });
+            
         }
+        
     }
 
     private void carregarTabela(int ID){
-
         Cliente c;
 
         tableModel.setNumRows(0);
@@ -210,6 +213,7 @@ public class VisaoClient extends JFrame{
             c = cc.getPersist().getClientes().get(i);
 
             if(c.getId() == ID){
+            	
                 tableModel.addRow(new Object[]{
                     c.getId(),
                     c.getName(),
@@ -217,12 +221,14 @@ public class VisaoClient extends JFrame{
                     c.getPhone(),
 
                 });
+                
             }
+            
         }
+        
     }
 
     private void carregarTabela(String name){
-
         Cliente c;
         tableModel.setNumRows(0);
 
@@ -230,18 +236,18 @@ public class VisaoClient extends JFrame{
             c = cc.getPersist().getClientes().get(i);
 
             if(c.getName().equals(name)){
+            	
                 tableModel.addRow(new Object[]{
                     c.getId(),
                     c.getName(),
                     c.getCpf(),
                     c.getPhone(),
                 });
+                
             }
+            
         }
+        
     }
-
-    // public static void main(String[] args) {
-    //   new VisaoClient();
     
-    // }
 }

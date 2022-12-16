@@ -119,7 +119,7 @@ public class FornecePersist extends Persistencia {
 	}
 	
 	public boolean carregarDoArquivo() {
-	    fornecedor= new ArrayList<>();
+	    fornecedor = new ArrayList<>();
 	    File file = new File("fornecedor.txt");
 	    FileInputStream fis;
 	    ObjectInputStream ois;

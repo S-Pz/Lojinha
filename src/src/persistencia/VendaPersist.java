@@ -85,7 +85,7 @@ public class VendaPersist extends Persistencia {
 		
 		for (Venda venda : venda) {
 			
-			if (venda.getCli().equals(nome)) {
+			if (venda.getCli().getName().equals(nome)) {//Faz a pesquisa pelo nome do cliente
 				return venda;
 			}
 			

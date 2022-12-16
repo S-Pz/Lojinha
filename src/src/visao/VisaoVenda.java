@@ -16,17 +16,20 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import controle.ControleVenda;
+import modelo.Produto;
 import modelo.Venda;
+import modelo.Cliente;
 import controle.ControleCliente;
 import controle.ControleProduto;
+import visao.buscarVenda;
 
 public class VisaoVenda extends JFrame {
     
     private static final long serialVersionUID = 1L;
     
-    ControleVenda cV = new ControleVenda();
-    ControleCliente cC = new ControleCliente();
-    ControleProduto cP = new ControleProduto();
+    ControleVenda cv = new ControleVenda();
+    ControleCliente cc = new ControleCliente();
+    ControleProduto cp = new ControleProduto();
     
 	private JFrame frame;
     private JLabel lbIdCliente, lbProdutos;
@@ -36,7 +39,6 @@ public class VisaoVenda extends JFrame {
     private JButton btnCancelar, btnVender, btnBuscar;
 
     public VisaoVenda(){
-
         frame = new JFrame("Vendas");
         frame.setSize(500,580);
         frame.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -64,11 +66,9 @@ public class VisaoVenda extends JFrame {
 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
-        tableModel.addColumn("Cliente");
-        tableModel.addColumn("Produto");
-        tableModel.addColumn("Quantidade");
+        tableModel.addColumn("Nome");
         tableModel.addColumn("Preço(R$)");
-        tableModel.addColumn("Total(R$)");
+        tableModel.addColumn("Quantidade");
 
         table = new JTable(tableModel);
         table.setPreferredSize(new Dimension(500, 400));
@@ -83,11 +83,14 @@ public class VisaoVenda extends JFrame {
 
         frame.add(scroll);
 
+        carregarTabela();
+
         btnVender = new JButton("Finalizar Venda");
         btnVender.addActionListener(new ActionListener(){
 
-            public void actionPerformed(ActionEvent arg0){
-              
+        	public void actionPerformed(ActionEvent arg0){
+                inserir();
+                carregarTabela();
             }
 
         });
@@ -96,118 +99,138 @@ public class VisaoVenda extends JFrame {
         
         btnCancelar = new JButton("Excluir Venda");
 		btnCancelar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
+				int vRem = 0;
+		    	int idProd = 0;
+		    	
+				String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover?");
+			    
+			    if(cc.buscar(((Venda) cv.buscar(Integer.parseInt(getMessage))).getCli().getId()) == null) {
+			    	
+			    	for(int i = 0; i < ((Venda) cv.buscar(Integer.parseInt(getMessage))).getProds().size(); i++) {
+			    		
+			    		if(cp.buscar(((Venda) cv.buscar(Integer.parseInt(getMessage))).getProds().get(i).getId()) != null) {
+					    	vRem = 1;
+					    	idProd = ((Venda) cv.buscar(Integer.parseInt(getMessage))).getProds().get(i).getId();
+					    	break;
+			    		}
+			    		
+			    	}
+			    	
+			    	if(vRem == 1) {
+			    		vRem = 0;
+			    		errorMessage("Exclua o produto " + idProd);
+				    	carregarTabela();
+			    	} else {
+			    		cp.remover(cp.buscar(Integer.parseInt(getMessage)));
+		                carregarTabela();
+			    	}
+			    	
+			    } else {
+                    errorMessage("Exclua o cliente " + ((Venda) cv.buscar(Integer.parseInt(getMessage))).getCli().getId());
+			    	carregarTabela();
+			    }
                 
-
-			}			
+			}	
+			
 		});
 
 		frame.add(btnCancelar);
 
         btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
-                
-			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou venda deseja buscar");
-			    
-                try{
-                    int aux = Integer.parseInt(getMessage);
-                    carregarTabela(aux);
-
-                }catch(Exception error){
-                    carregarTabela(getMessage);
-                }
-                
-			}			
+                new buscarVenda();
+			}	
+			
 		});
 
         frame.add(btnBuscar);
-
         frame.setVisible(true);
-        
     }
 
-    // public void inserir(){
-
-    // 	int idFor;
-    //     Produto produto = new Produto();
-
-    //     produto.setId(cp.getPersist().getIds());
-    //     cp.getPersist().setIds(cp.getPersist().getIds() + 1);
-    //     produto.setName(tfName.getText());
-    //     produto.setType(tfType.getText());
-    //     produto.setPrice(Float.parseFloat(tfPrice.getText()));
-    //     produto.setQuantity(Integer.parseInt(tfQuant.getText()));
-    //     idFor = Integer.parseInt(tfFor.getText());
+    public void inserir(){
         
-    //     if(cf.buscar(idFor) == null) {
-    //         JOptionPane.showMessageDialog(this, "Insira um fornecedor válido.",
-    //         "ERROR", JOptionPane.ERROR_MESSAGE);
+	    int idCli, vEx = 0;
+	    String idsProd;
+	    Venda venda = new Venda();
+	
+	    idCli = Integer.parseInt(tflbIdCliente.getText());
+	        
+	    if(cc.buscar(idCli) == null) {
+		    errorMessage("Insira um cliente válido");
+	    } else {
+	    	idsProd = tfProdutos.getText();
+	    	String[] parts = idsProd.split("-");
+	    	
+	    	for(int i = 0; i < parts.length; i++) {
 
-    //     } else {
-    //     	cp.inserir(produto);
-    //     }
+	    		if(cp.buscar(Integer.parseInt(parts[i])) == null) {
+	    			vEx = 1;
+	    			break;
+	    		}
+	    		
+	    	}
+	    	
+	    	if(vEx == 1) {
+	    		vEx = 0;
+	    		errorMessage("Insira apenas produtos válidos");
+	    	} else {
+	    		venda.iniListProd();
+	    		
+	    		venda.setId(cv.getPersist().getIds());
+	    	    cv.getPersist().setIds(cv.getPersist().getIds() + 1);
+	    		venda.setCliente((Cliente) cc.buscar(idCli));
+	    	    
+	    		for(int i = 0; i < parts.length; i++) {
+	    			
+	    			if(((Produto) cp.buscar(Integer.parseInt(parts[i]))).getQuantity() - 1 >= 0) {
+	    				venda.addProd((Produto) cp.buscar(Integer.parseInt(parts[i])));
+	    				((Produto) cp.buscar(Integer.parseInt(parts[i]))).setQuantity(((Produto) cp.buscar(Integer.parseInt(parts[i]))).getQuantity() - 1);
+	    			} else {
+	    				vEx = 1;
+	    				break;
+	    			}
+	    			
+		    	}
+	    		
+	    		if(vEx == 1) {
+	    			vEx = 0;
+	    			errorMessage("Produtos insuficientes");
+	    		} else {
+                    System.out.println("Id da venda adicionada: " + venda.getId());
+	    			cv.inserir(venda);
+	    		}
+	    		
+	    	}
+	    	
+	    }
        
-    // }
+   }
 
     private void carregarTabela(){
-
-        Venda v;
+        Produto p;
         tableModel.setNumRows(0);
-        
-        for(int i = 0; i < cv.getPersist().getVenda().size(); i++) {
-            v = cv.getPersist().getProdutos().get(i);
+
+        for(int i = 0; i < cp.getPersist().getProdutos().size(); i++) {
+            p = cp.getPersist().getProdutos().get(i);
 
             tableModel.addRow(new Object[]{
-                v.getId(),
-                v.getCli(),
-                v.getProds(),
-                
+                p.getId(),
+                p.getName(),
+                p.getPrice(),
+                p.getQuantity()
             });
+            
         }
+        
+    }
+    
+    private void errorMessage(String m){
+        JOptionPane.showMessageDialog(this, m,
+        "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void carregarTabela(int ID){
-
-        Produto p;
-        tableModel.setNumRows(0);
-
-        for(int i = 0; i < cp.getPersist().getProdutos().size(); i++) {
-            p = cp.getPersist().getProdutos().get(i);
-
-            if(p.getId() == ID){
-                tableModel.addRow(new Object[]{
-                    p.getId(),
-                    p.getName(),
-                    p.getType(),
-                    p.getPrice(),
-                    p.getQuantity()
-                });
-            }
-        }
-    }
-
-    private void carregarTabela(String name){
-        Produto p;
-
-        tableModel.setNumRows(0);
-
-        for(int i = 0; i < cp.getPersist().getProdutos().size(); i++) {
-            p = cp.getPersist().getProdutos().get(i);
-
-            if(p.getName().equals(name)){
-                tableModel.addRow(new Object[]{
-                    p.getId(),
-                    p.getName(),
-                    p.getType(),
-                    p.getPrice(),
-                    p.getQuantity()
-                });
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        new VisaoVenda();
-    }
 }

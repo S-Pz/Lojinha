@@ -11,4 +11,5 @@ public class ControleVenda extends Controle {
     public VendaPersist getPersist(){
         return (VendaPersist) this.persistencia;
     }
+    
 }

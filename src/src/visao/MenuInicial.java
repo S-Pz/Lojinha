@@ -21,7 +21,6 @@ public class MenuInicial extends JFrame{
     private JFrame frame; 
     
     public MenuInicial(){
-
         frame = new JFrame("Menu Inicial");
         
         frame.setSize(500, 370);

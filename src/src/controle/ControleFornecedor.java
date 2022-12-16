@@ -11,4 +11,5 @@ public class ControleFornecedor extends Controle {
     public FornecePersist getPersist(){
         return (FornecePersist) this.persistencia;
     }
+    
 }

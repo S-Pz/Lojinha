@@ -22,7 +22,7 @@ import modelo.Fornecedor;
 import controle.ControleFornecedor;
 
 public class VisaoFornecedor extends JFrame {
-    
+	
     private static final long serialVersionUID = 1L;
 
 	ControleFornecedor cf = new ControleFornecedor();
@@ -37,7 +37,6 @@ public class VisaoFornecedor extends JFrame {
     JScrollPane scroll;
 
     public VisaoFornecedor(){
-        
         frame = new JFrame("Fornecedor");
         
         frame.setSize(500, 580);
@@ -118,31 +117,34 @@ public class VisaoFornecedor extends JFrame {
         
         btnApagar = new JButton("Apagar");
 		btnApagar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
-                
-                String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
+                String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover?");
                 cf.remover(cf.buscar(Integer.parseInt(getMessage)));
                 carregarTabela();
-
-			}			
+			}	
+			
 		});
+		
 		btnPanel.add(btnApagar);
 
         btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
-                
-			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou fornecedor deseja buscar");
+			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou fornecedor (nome) deseja buscar?");
 			    try{
                     int aux = Integer.parseInt(getMessage);
                     carregarTabela(aux);
 
-                }catch(Exception error){
+                } catch(Exception e) {
                     carregarTabela(getMessage);
                 }
                 
 			}			
+			
 		});
+		
 		btnPanel.add(btnBuscar);
 
         frame.add(btnPanel);
@@ -150,7 +152,6 @@ public class VisaoFornecedor extends JFrame {
     }
 
     public void inserir(){
-
         Fornecedor fornecedor = new Fornecedor();
 
         fornecedor.setId(cf.getPersist().getIds());
@@ -164,7 +165,6 @@ public class VisaoFornecedor extends JFrame {
     }
 
     private void carregarTabela(){
-
         Fornecedor f;
 
         tableModel.setNumRows(0);
@@ -180,10 +180,11 @@ public class VisaoFornecedor extends JFrame {
                 f.getPhone(),
     
             });
+            
         }
+        
     }
     private void carregarTabela(int ID){
-
         Fornecedor f;
 
         tableModel.setNumRows(0);
@@ -192,6 +193,7 @@ public class VisaoFornecedor extends JFrame {
             f = cf.getPersist().getFornecedores().get(i);
 
             if(f.getId() == ID){
+            	
                 tableModel.addRow(new Object[]{
                     f.getId(),
                     f.getName(),
@@ -200,12 +202,14 @@ public class VisaoFornecedor extends JFrame {
                     f.getPhone(),
 
                 });
+                
             }
+            
         }
+        
     }
 
     private void carregarTabela(String name){
-
         Fornecedor f;
         tableModel.setNumRows(0);
 
@@ -213,6 +217,7 @@ public class VisaoFornecedor extends JFrame {
             f = cf.getPersist().getFornecedores().get(i);
 
             if(f.getName().equals(name)){
+            	
                 tableModel.addRow(new Object[]{
                     f.getId(),
                     f.getName(),
@@ -220,7 +225,11 @@ public class VisaoFornecedor extends JFrame {
                     f.getAdress(),
                     f.getPhone(),
                 });
+                
             }
+            
         }
+        
     }
+    
 }

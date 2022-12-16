@@ -35,8 +35,7 @@ public class VisaoProduto extends JFrame{
     private DefaultTableModel tableModel;
     private JFrame frame; 
 
-    public VisaoProduto(){
-
+    public VisaoProduto() {
         frame = new JFrame("Cadastra Produto");
         
         frame.setSize(500, 600);
@@ -132,40 +131,41 @@ public class VisaoProduto extends JFrame{
         
         btnApagar = new JButton("Apagar");
 		btnApagar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
-                
-			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover");
+				String getMessage = JOptionPane.showInputDialog(frame, "Qual ID deseja remover?");
 			    
 			    if(cf.buscar(((Produto) cp.buscar(Integer.parseInt(getMessage))).getFornecedor().getId()) == null) {
 			    	cp.remover(cp.buscar(Integer.parseInt(getMessage)));
 	                carregarTabela();
-
 			    } else {
-
                     errorMessage("Exclua o fornecedor" + ((Produto) cp.buscar(Integer.parseInt(getMessage))).getFornecedor().getId());
 			    	carregarTabela();
 			    }
                 
-			}			
+			}
+			
 		});
+		
 		btnPanel.add(btnApagar);
 
         btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener( new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
-                
-			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou produto deseja buscar");
+			    String getMessage = JOptionPane.showInputDialog(frame, "Qual ID ou produto (nome) deseja buscar?");
 			    
                 try{
                     int aux = Integer.parseInt(getMessage);
                     carregarTabela(aux);
-
-                }catch(Exception error){
+                } catch(Exception e) {
                     carregarTabela(getMessage);
                 }
                 
-			}			
+			}
+			
 		});
+		
 		btnPanel.add(btnBuscar);
 
         frame.add(btnPanel);
@@ -173,7 +173,6 @@ public class VisaoProduto extends JFrame{
     }
 
     public void inserir(){
-
     	int idFor;
         Produto produto = new Produto();
 
@@ -187,7 +186,6 @@ public class VisaoProduto extends JFrame{
         
         if(cf.buscar(idFor) == null) {
             errorMessage("Insira um fornecedor válido");
-
         } else {
         	cp.inserir(produto);
         }
@@ -195,7 +193,6 @@ public class VisaoProduto extends JFrame{
     }
 
     private void carregarTabela(){
-
         Produto p;
         tableModel.setNumRows(0);
 
@@ -209,11 +206,12 @@ public class VisaoProduto extends JFrame{
                 p.getPrice(),
                 p.getQuantity()
             });
+            
         }
+        
     }
 
     private void carregarTabela(int ID){
-
         Produto p;
         tableModel.setNumRows(0);
 
@@ -221,6 +219,7 @@ public class VisaoProduto extends JFrame{
             p = cp.getPersist().getProdutos().get(i);
 
             if(p.getId() == ID){
+            	
                 tableModel.addRow(new Object[]{
                     p.getId(),
                     p.getName(),
@@ -228,8 +227,11 @@ public class VisaoProduto extends JFrame{
                     p.getPrice(),
                     p.getQuantity()
                 });
+                
             }
+            
         }
+        
     }
 
     private void carregarTabela(String name){
@@ -241,6 +243,7 @@ public class VisaoProduto extends JFrame{
             p = cp.getPersist().getProdutos().get(i);
 
             if(p.getName().equals(name)){
+            	
                 tableModel.addRow(new Object[]{
                     p.getId(),
                     p.getName(),
@@ -248,17 +251,17 @@ public class VisaoProduto extends JFrame{
                     p.getPrice(),
                     p.getQuantity()
                 });
+                
             }
+            
         }
+        
     }
+    
     private void errorMessage(String m){
-
         JOptionPane.showMessageDialog(this, m,
         "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
-    // public static void main(String[] args) {
-    //     new VisaoProduto();
-    // }
 }
 
