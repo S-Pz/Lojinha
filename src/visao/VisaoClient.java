@@ -36,6 +36,7 @@ public class VisaoClient extends JFrame{
     JScrollPane scroll;
 
     public VisaoClient(){
+        
     	frame = new JFrame("Cadastra Cliente");
         frame.setSize(500, 580);
         frame.setLocationRelativeTo(null);

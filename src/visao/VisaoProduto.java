@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.Produto;
+import modelo.Fornecedor;
 import controle.ControleProduto;
 import controle.ControleFornecedor;
 
@@ -139,7 +140,7 @@ public class VisaoProduto extends JFrame{
 			    	cp.remover(cp.buscar(Integer.parseInt(getMessage)));
 	                carregarTabela();
 			    } else {
-                    errorMessage("Exclua o fornecedor" + ((Produto) cp.buscar(Integer.parseInt(getMessage))).getFornecedor().getId());
+                    errorMessage("Exclua o fornecedor " + ((Produto) cp.buscar(Integer.parseInt(getMessage))).getFornecedor().getId());
 			    	carregarTabela();
 			    }
                 
@@ -183,10 +184,12 @@ public class VisaoProduto extends JFrame{
         produto.setPrice(Float.parseFloat(tfPrice.getText()));
         produto.setQuantity(Integer.parseInt(tfQuant.getText()));
         idFor = Integer.parseInt(tfFor.getText());
+        produto.setFornecedor((Fornecedor) cf.buscar(idFor));
         
         if(cf.buscar(idFor) == null) {
             errorMessage("Insira um fornecedor válido");
         } else {
+        	
         	cp.inserir(produto);
         }
        

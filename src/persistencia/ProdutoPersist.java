@@ -139,6 +139,7 @@ public class ProdutoPersist extends Persistencia {
 				fis.close();
 			}
 			
+			ids = produtos.size();
 			return true;
 		} catch (Exception e) {
 			return false;

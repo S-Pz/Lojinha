@@ -10,29 +10,29 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import modelo.Venda;
+import modelo.Cliente;
 import modelo.Entidade;
 
-public class VendaPersist extends Persistencia {
+public class ClientePersist extends Persistencia {
 	
-	private static VendaPersist vP;
-	private static List<Venda> venda;
+	private static ClientePersist cP;
+	private static List<Cliente> clientes;
 	private static int ids;
 
-	private VendaPersist() {
-		venda = new ArrayList<>();
+	private ClientePersist() {
+	  clientes = new ArrayList<>();
 	}
 
-	public static VendaPersist getVendaPer(){
+	public static ClientePersist getCliPer(){
 
-		if(vP == null){
-			vP = new VendaPersist();
-			vP.setIds(0);
+	  if(cP == null){
+		  cP = new ClientePersist();
+		  cP.setIds(0);
 		}
 
-		return vP;
+	  return cP;
 	}
-	
+
 	public int getIds() {
 		return ids;
 	}
@@ -40,42 +40,41 @@ public class VendaPersist extends Persistencia {
 	public void setIds(int id) {
 		ids = id;
 	}
-
-	public List<Venda> getVenda() {
-		return venda;
+	
+	public List<Cliente> getClientes() {
+		return clientes;
 	}
 
 	public void inserir(Entidade entidade) {
-		venda.add((Venda) entidade);
+		clientes.add((Cliente) entidade);
 	}
 
 	public boolean remover(Entidade entidade) {
-		return venda.remove((Venda) entidade);
+		return clientes.remove((Cliente) entidade);
 	}
 
 	public boolean alterar(Entidade entidade){
-		Venda v = (Venda) entidade;
+		Cliente cliente = (Cliente) entidade;
+		
+		for (int i = 0; i < clientes.size(); i++) {
+
+			if (clientes.get(i).getId() == cliente.getId()) {
+				clientes.set(i, cliente);
+
+				return true;
+			}
+		}
     
-    	for (int i = 0; i < venda.size(); i++) {
-
-    		if (venda.get(i).getId() == v.getId()) {
-    			venda.set(i, v);
-        		return true;
-      		}
-
-    	}
-  
-    	return false;
+		return false;
 	}
 
 	public Entidade buscar(int id) {
 		
-		for (Venda venda : venda) {
-			
-			if (venda.getId() == id) {
-				return venda;
+		for (Cliente cliente : clientes) {
+		
+			if (cliente.getId() == id) {
+				return cliente;
 			}
-			
 		}
 		
 		return null;
@@ -83,19 +82,17 @@ public class VendaPersist extends Persistencia {
 
 	public Entidade buscar(String nome) {
 		
-		for (Venda venda : venda) {
-			
-			if (venda.getCli().getName().equals(nome)) {//Faz a pesquisa pelo nome do cliente
-				return venda;
+		for (Cliente cliente : clientes) {
+			if (cliente.getName().equals(nome)) {
+				return cliente;
 			}
-			
 		}
 		
 		return null;
 	}
   
 	public boolean salvarNoArquivo() {
-		File file = new File("venda.txt");
+	    File file = new File("clientes.txt");
 	    FileOutputStream fos;
 	    ObjectOutputStream oos;
 	
@@ -103,8 +100,8 @@ public class VendaPersist extends Persistencia {
 	    	fos = new FileOutputStream(file);
 	    	oos = new ObjectOutputStream(fos);
 	
-	    	for (Venda venda : venda) {
-	    		oos.writeObject(venda);
+	    	for (Cliente cliente : clientes) {
+	    		oos.writeObject(cliente);
 	    	}
 	
 	    	oos.close();
@@ -118,8 +115,8 @@ public class VendaPersist extends Persistencia {
 	}
 	
 	public boolean carregarDoArquivo() {
-		venda = new ArrayList<>();
-	    File file = new File("venda.txt");
+	    clientes = new ArrayList<>();
+	    File file = new File("clientes.txt");
 	    FileInputStream fis;
 	    ObjectInputStream ois;
 	
@@ -131,7 +128,7 @@ public class VendaPersist extends Persistencia {
 	    		
 	    		while (true) {
 	    			Object obj = ois.readObject();
-	    			venda.add((Venda) obj);
+	    			clientes.add((Cliente) obj);
 	    		}
 	    		
 	    	} catch (EOFException e) {
@@ -139,11 +136,10 @@ public class VendaPersist extends Persistencia {
 	    		fis.close();
 	    	}
 	    	
+	    	ids = clientes.size();
 	    	return true;
 	    } catch (Exception e) {
-	      return false;
+	    	return false;
 	    }
-	    
 	}
-
 }

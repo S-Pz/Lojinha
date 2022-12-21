@@ -18,9 +18,11 @@ import controle.*;
 import modelo.Venda;
 import modelo.Produto;
 
-public class buscarVenda extends JFrame{
+public class BuscarVenda extends JFrame{
 
-    ControleVenda cv = new ControleVenda();
+    private static final long serialVersionUID = 1L;
+
+	ControleVenda cv = new ControleVenda();
 
     private DefaultTableModel tableModel;
 	private JButton btnBuscarVenda;
@@ -29,16 +31,17 @@ public class buscarVenda extends JFrame{
     private JLabel lbIdVenda, lbIdCliente;
     private JTable table;
 
-    public buscarVenda(){
+    public BuscarVenda(){
+
         frame = new JFrame("Busca Venda");
         
         frame.setSize(500, 580);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
      
         frame.setResizable(false);
-    
+        
+        //Adição dos Labels
         lbIdVenda = new JLabel("ID da Venda: ");
         tflbIdVenda= new JTextField();
 
@@ -47,24 +50,31 @@ public class buscarVenda extends JFrame{
         frame.add(lbIdVenda);
         frame.add(tflbIdVenda);
 
+        //Adição dos campos de textos
         tfIdCliente = new JTextField();
         tfIdCliente.setPreferredSize(new Dimension(30,30));
 
+        //Botão de buscar venda
         btnBuscarVenda = new JButton("Buscar Venda");
         btnBuscarVenda.setPreferredSize(new Dimension(150, 30));
         btnBuscarVenda.addActionListener( new ActionListener(){
             
             public void actionPerformed (ActionEvent arg0){
+                
+                //Seta no campo de texto o valor retornado pela função buscar
                 tfIdCliente.setText(buscar(Integer.parseInt(tflbIdVenda.getText())));
             }
             
         });
         
 		frame.add(btnBuscarVenda);
+
         lbIdCliente = new JLabel("ID Cliente");
+
         frame.add(lbIdCliente);
         frame.add(tfIdCliente);
 
+        //Adição da tabela
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Produtos");
    
@@ -80,10 +90,12 @@ public class buscarVenda extends JFrame{
         frame.setVisible(true);
     }
 
+    //Função que busca a venda realizada atráves do ID passado como parâmetro
     private String buscar(int ID){
-        
+
         Produto p;
         Venda v = (Venda) cv.buscar(ID);
+
         tableModel.setNumRows(0);
 
         for(int i = 0; i < v.getProds().size(); i++) {
@@ -98,7 +110,6 @@ public class buscarVenda extends JFrame{
         return Integer.toString(v.getCli().getId());
     }
 
-    public static void main(String[] args) {
-        new buscarVenda();
-    }
+    //O retorno da função é um inteiro que é o ID do cliente, que é setado para o usuário ver aparecendo no
+    //campo de texto na tela interface de cliente.
 }

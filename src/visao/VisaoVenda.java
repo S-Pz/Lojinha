@@ -21,7 +21,6 @@ import modelo.Venda;
 import modelo.Cliente;
 import controle.ControleCliente;
 import controle.ControleProduto;
-import visao.buscarVenda;
 
 public class VisaoVenda extends JFrame {
     
@@ -39,6 +38,7 @@ public class VisaoVenda extends JFrame {
     private JButton btnCancelar, btnVender, btnBuscar;
 
     public VisaoVenda(){
+
         frame = new JFrame("Vendas");
         frame.setSize(500,580);
         frame.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -48,6 +48,7 @@ public class VisaoVenda extends JFrame {
         JOptionPane.showMessageDialog(this, "Para comprar faça: ID produto + hífen. Ex: 43-1-2", "Instrução",
         JOptionPane.INFORMATION_MESSAGE);
 
+		//Adiciona os campos Labels e texto para o cliente
         lbIdCliente = new JLabel("ID do Cliente: ");
         tflbIdCliente = new JTextField();
 
@@ -56,6 +57,7 @@ public class VisaoVenda extends JFrame {
         frame.add(lbIdCliente);
         frame.add(tflbIdCliente);
 
+		//Adiciona os campos Labels e texto para o produto
         lbProdutos = new JLabel("Digite os Produtos");
         tfProdutos = new JTextField();
 
@@ -64,6 +66,7 @@ public class VisaoVenda extends JFrame {
         frame.add(lbProdutos);
         frame.add(tfProdutos);
 
+		//Adiciona a tabla na interface
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
@@ -74,17 +77,19 @@ public class VisaoVenda extends JFrame {
         table.setPreferredSize(new Dimension(500, 400));
         table.setLayout(new FlowLayout(FlowLayout.RIGHT));
         table.getColumnModel().getColumn(0).setMaxWidth(50);
-        table.getColumnModel().getColumn(1).setMaxWidth(200);
+        table.getColumnModel().getColumn(1).setMaxWidth(100);
         table.getColumnModel().getColumn(2).setMaxWidth(150);
-        table.getColumnModel().getColumn(3).setMaxWidth(60);
+        table.getColumnModel().getColumn(3).setMaxWidth(150);
 
         JScrollPane scroll = new JScrollPane();
 		scroll.setViewportView(table);
 
         frame.add(scroll);
-
+		
+		//Atualiza a tabela assim que o menu se abrir
         carregarTabela();
 
+		//botão de venda
         btnVender = new JButton("Finalizar Venda");
         btnVender.addActionListener(new ActionListener(){
 
@@ -97,10 +102,12 @@ public class VisaoVenda extends JFrame {
 
         frame.add(btnVender);
         
+		//Botão de excluir venda
         btnCancelar = new JButton("Excluir Venda");
 		btnCancelar.addActionListener( new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
+
 				int vRem = 0;
 		    	int idProd = 0;
 		    	
@@ -123,7 +130,7 @@ public class VisaoVenda extends JFrame {
 			    		errorMessage("Exclua o produto " + idProd);
 				    	carregarTabela();
 			    	} else {
-			    		cp.remover(cp.buscar(Integer.parseInt(getMessage)));
+			    		cv.remover(cv.buscar(Integer.parseInt(getMessage)));
 		                carregarTabela();
 			    	}
 			    	
@@ -131,18 +138,17 @@ public class VisaoVenda extends JFrame {
                     errorMessage("Exclua o cliente " + ((Venda) cv.buscar(Integer.parseInt(getMessage))).getCli().getId());
 			    	carregarTabela();
 			    }
-                
-			}	
-			
+			}		
 		});
 
 		frame.add(btnCancelar);
 
+		//Botão de buscar uma venda
         btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener( new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-                new buscarVenda();
+                new BuscarVenda();
 			}	
 			
 		});
@@ -151,9 +157,10 @@ public class VisaoVenda extends JFrame {
         frame.setVisible(true);
     }
 
+	//Função que realiza a venda, no caso insere os produtos já cadastrados na tabela na aba de vendas
     public void inserir(){
-        
-	    int idCli, vEx = 0;
+
+	    int idCli, cont = 0, vEx = 0;
 	    String idsProd;
 	    Venda venda = new Venda();
 	
@@ -171,7 +178,6 @@ public class VisaoVenda extends JFrame {
 	    			vEx = 1;
 	    			break;
 	    		}
-	    		
 	    	}
 	    	
 	    	if(vEx == 1) {
@@ -189,28 +195,34 @@ public class VisaoVenda extends JFrame {
 	    			if(((Produto) cp.buscar(Integer.parseInt(parts[i]))).getQuantity() - 1 >= 0) {
 	    				venda.addProd((Produto) cp.buscar(Integer.parseInt(parts[i])));
 	    				((Produto) cp.buscar(Integer.parseInt(parts[i]))).setQuantity(((Produto) cp.buscar(Integer.parseInt(parts[i]))).getQuantity() - 1);
+	    				cont++;
 	    			} else {
 	    				vEx = 1;
 	    				break;
-	    			}
-	    			
+	    			}	
 		    	}
 	    		
 	    		if(vEx == 1) {
 	    			vEx = 0;
 	    			errorMessage("Produtos insuficientes");
+	    			
+	    			for(int i = 0; i < cont; i++) {
+	    				((Produto) cp.buscar(Integer.parseInt(parts[i]))).setQuantity(((Produto) cp.buscar(Integer.parseInt(parts[i]))).getQuantity() + 1);
+	    			}
+	    			
+	    			cont = 0;
+
 	    		} else {
                     System.out.println("Id da venda adicionada: " + venda.getId());
 	    			cv.inserir(venda);
 	    		}
-	    		
 	    	}
-	    	
 	    }
-       
-   }
+    }
 
+	//Função que atualiza a tabela de acordo com os dados inseridos
     private void carregarTabela(){
+
         Produto p;
         tableModel.setNumRows(0);
 
@@ -222,15 +234,12 @@ public class VisaoVenda extends JFrame {
                 p.getName(),
                 p.getPrice(),
                 p.getQuantity()
-            });
-            
+            });   
         }
-        
     }
     
+	//Mostra uma menssagem de error na tela, essa menssagem é passada por parâmetro na função
     private void errorMessage(String m){
-        JOptionPane.showMessageDialog(this, m,
-        "ERROR", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, m, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
-
 }

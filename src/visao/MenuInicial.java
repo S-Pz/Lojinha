@@ -21,6 +21,7 @@ public class MenuInicial extends JFrame{
     private JFrame frame; 
     
     public MenuInicial(){
+        
         frame = new JFrame("Menu Inicial");
         
         frame.setSize(500, 370);
@@ -28,14 +29,7 @@ public class MenuInicial extends JFrame{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new FlowLayout(FlowLayout.CENTER));
         frame.setResizable(false);
-        
-        // JPanel panel = new JPanel();
-
-        // panel.setPreferredSize(new Dimension(500, 500));
-        // panel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        
-        //frame.add(panel);
-
+   
         btnCliente = new JButton("Cliente");
         btnCliente.setPreferredSize(new Dimension(350, 60));
         btnCliente.addActionListener(new ActionListener(){
@@ -107,5 +101,4 @@ public class MenuInicial extends JFrame{
         frame.add(btnSave);
         frame.setVisible(true);
     }
-    
 }

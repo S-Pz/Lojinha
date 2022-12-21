@@ -140,6 +140,7 @@ public class FornecePersist extends Persistencia {
 	    		fis.close();
 	    	}
 	    	
+	    	ids = fornecedor.size();
 	    	return true;
 	    	} catch (Exception e) {
 	    		return false;
